@@ -68,10 +68,10 @@ zmqpubhashblock=tcp://127.0.0.1:23456
 
 ## 対応コイン
 
-| COIN_NAME |
-| ---- |
-| bellcoin |
-| bellcoin_regtest |
+| COIN_NAME | アルゴリズムのモジュール |
+| ---- | ---- |
+| bellcoin | https://github.com/bellcoin-electrum/bell_yespower_python3 |
+| bellcoin_regtest | https://github.com/bellcoin-electrum/bell_yespower_python3 |
 
 ## コインの追加
 PoolSetting.pyに以下の項目を追記してください。  
