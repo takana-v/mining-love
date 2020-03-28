@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block title %}Mining Log{% end %}
+{% block content %}
+<h2>採掘履歴</h2>
+<p>当プールで採掘された過去10ブロックを表示しています。（上が最新）</p>
+<table class="blocklog"><tbody>
+    <tr><td>{% try %}{% raw blocklog[0] %}{% except %}{{ "-- No data --" }}{% end %}</td></tr>
+    <tr><td>{% try %}{% raw blocklog[1] %}{% except %}{{ "-- No data --" }}{% end %}</td></tr>
+    <tr><td>{% try %}{% raw blocklog[2] %}{% except %}{{ "-- No data --" }}{% end %}</td></tr>
+    <tr><td>{% try %}{% raw blocklog[3] %}{% except %}{{ "-- No data --" }}{% end %}</td></tr>
+    <tr><td>{% try %}{% raw blocklog[4] %}{% except %}{{ "-- No data --" }}{% end %}</td></tr>
+    <tr><td>{% try %}{% raw blocklog[5] %}{% except %}{{ "-- No data --" }}{% end %}</td></tr>
+    <tr><td>{% try %}{% raw blocklog[6] %}{% except %}{{ "-- No data --" }}{% end %}</td></tr>
+    <tr><td>{% try %}{% raw blocklog[7] %}{% except %}{{ "-- No data --" }}{% end %}</td></tr>
+    <tr><td>{% try %}{% raw blocklog[8] %}{% except %}{{ "-- No data --" }}{% end %}</td></tr>
+    <tr><td>{% try %}{% raw blocklog[9] %}{% except %}{{ "-- No data --" }}{% end %}</td></tr>
+</tbody></table>
+{% end %}

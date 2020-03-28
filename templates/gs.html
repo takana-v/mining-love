@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block title %}Getting Started{% end %}
+{% block content %}
+<h2>Getting Started</h2>
+<hr style="margin:5px 0;">
+<p>Username: Your Address（"."で区切るとワーカー名を指定可能）</p>
+<p>Password: Anything（無しでOK）</p>
+<p>例: cpuminer-avx2.exe -a yespower -o stratum+tcp://test.mining.love:3001 -u 1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2.worker1</p>
+<p>（ソフトの名前等は各自で読み替えてください）</p>
+<p>Portとdiffは以下の表参考</p>
+<table class="blocklog"><tbody>
+<tr><th>Port</th><th>初期Diff</th></tr>
+{% for pd in port_diff%}<tr><td>{{str(pd[0])}}</td><td>{{str(pd[1])}}</td></tr>{% end %}
+</tbody></table>
+{% end %}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+ <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
+ <title>{% block title %}{% end %}</title>
+ <meta charset="utf-8">
+ <link rel="stylesheet" href="{{static_url('css/ress.css')}}">
+ <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+ <link rel="stylesheet" href="{{static_url('css/style.css')}}">
+ <!--<style>
+ @font-face{
+   font-family: "Quantum";
+   src:url({{ static_url('font/Quantum.otf')}});}
+ </style>-->
+</head>
+<body>
+  <header>
+    <h1 id="site-title">mining.love</h1>
+  </header>
+  <hr id="tab-bar-hr">
+  <div id="tab-bar">
+    <a href="/"><div class="tab-bar">
+      <i class="fas fa-home"></i>
+     <p>ホーム</p>
+   </div></a>
+   <a href="/getting_started"><div class="tab-bar">
+     <i class="fas fa-coins"></i>
+    <p>始め方</p>
+  </div></a>
+  <a href="/mining_log"><div class="tab-bar">
+    <i class="fas fa-table"></i>
+   <p>採掘履歴</p>
+ </div></a>
+  <a href="/others"><div class="tab-bar">
+    <i class="fas fa-book-open"></i>
+   <p>その他</p>
+ </div></a>
+  </div>
+
+{% block content %}
+{% end %}
+
+</body>
+</html>
