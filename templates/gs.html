@@ -1,15 +1,36 @@
+
 {% extends "layout.html" %}
-{% block title %}Getting Started{% end %}
+{% block title %}始め方{% end %}
 {% block content %}
-<h2>Getting Started</h2>
-<hr style="margin:5px 0;">
-<p>Username: Your Address（"."で区切るとワーカー名を指定可能）</p>
-<p>Password: Anything（無しでOK）</p>
-<p>例: cpuminer-avx2.exe -a yespower -o stratum+tcp://test.mining.love:3001 -u 1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2.worker1</p>
-<p>（ソフトの名前等は各自で読み替えてください）</p>
-<p>Portとdiffは以下の表参考</p>
-<table class="blocklog"><tbody>
-<tr><th>Port</th><th>初期Diff</th></tr>
-{% for pd in port_diff%}<tr><td>{{str(pd[0])}}</td><td>{{str(pd[1])}}</td></tr>{% end %}
-</tbody></table>
+<h2>Getting started(始め方)</h2>
+<hr>
+<h3>1.アドレスの取得</h3>
+<p>公式のウォレット(<a href="">DLリンク</a>)をオススメします。</p>
+<hr>
+<h3>2.マイニングソフトのダウンロード</h3>
+<p><a href="">CPU: cpuminer ver x.x.x</a></p>
+<hr>
+<h3>3.マイニングソフトの起動</h3>
+<p>マイニングソフトがある階層でコマンドプロンプトを起動し、以下のようなコマンドを実行してください。<br>(例なので各自の環境に合わせてください)</p>
+<p>cpuminer -a yespower -o stratum+tcp://example.com:3001 -u 1KRotMnQpxu3sePQnsVLRy3EraRFYfJQFR</p>
+<hr>
+<p>以下はポートの一覧です。</p>
+<table id="port-diff">
+  <tr>
+    <th>Port</th>
+    <th>Diff</th>
+  </tr>
+  <tr>
+    <td>3001</td>
+    <td>0.1</td>
+  </tr>
+  <tr>
+    <td>3001</td>
+    <td>0.1</td>
+  </tr>
+  <tr>
+    <td>3001</td>
+    <td>0.1</td>
+  </tr>
+</table>
 {% end %}

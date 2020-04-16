@@ -20,7 +20,6 @@ class MAIN_SETTING:
         "coind_zmqport": 28334
         }
     WEB_PORT = 8080
-    WEB_EXPLORER_URL = "https://explorer.bellcoin.web4u.jp/block/"
 
 class BELLCOIN:
     UNIT = "BELL"
@@ -31,6 +30,7 @@ class BELLCOIN:
     BLOCKTIME = 60
     P2PKH_PREF = '19'
     P2SH_PREF = '55'
+    WEB_EXPLORER_URL = "https://explorer.bellcoin.web4u.jp/block/"
     # WITNESS_RESERVED_VALUE = "0000000000000000000000000000000000000000000000000000000000000000"
 
 class BELLCOIN_REGTEST(BELLCOIN):

@@ -1,0 +1,22 @@
+
+{% extends "layout.html" %}
+{% block title %}ワーカー詳細{% end %}
+{% block content %}
+<h2>{{name}}</h2>
+<hr>
+<p><strong>推定報酬: {{cont}}{{unit}}</strong><br>(一回の採掘の報酬)</p>
+<hr>
+<h3>ワーカーの一覧</h3>
+<table id="workers">
+  <tr>
+    <th>ワーカー名</th>
+    <th>ハッシュレート</th>
+  </tr>
+  {% for addr in data %}
+  <tr>
+    <td>{{addr}}</td>
+    <td>{{data[addr]}}</td>
+  </tr>
+  {% end %}
+</table>
+{% end %}

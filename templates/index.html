@@ -2,13 +2,15 @@
 {% extends "layout.html" %}
 {% block title %}トップページ{% end %}
 {% block content %}
-<h1>Welcome to mining pool</h1>
-<hr style="margin:10px 0;">
-<p>Coin: {{coin_name}}</p>
-<p>Pool Fee:{{fee}}</p>
-<hr style="margin:10px 0;">
-<p>採掘方法は「<a href='/getting_started'>始め方</a>」をご覧ください。</p>
-<p>当プールの報酬の仕組みは特殊です。</p>
-<p>2分毎にアドレスごとの報酬が計算され、マイナーはそれに基づいて計算します。</p>
-<p>ブロックが採掘された場合は、プールではなくマイナーのアドレスに直接報酬が入ります。</p>
+<h1>Welcome to mining.love !</h1>
+<h2>Coin: bitcoin</h2>
+<h2>Pool fee: 0%</h2>
+<br>
+<p>マイニングの始め方は<a href="/getting_started">Getting Started(始め方)</a>のページをご覧ください。</p>
+<hr>
+<h3>Mining settings</h3>
+<p>Username: your address</p>
+<p>Password: anything</p>
+<p>Algorithm: yespower</p>
+<p>Port(Diff): 3001(0.1), 3002(0.5)</p>
 {% end %}

@@ -1,0 +1,25 @@
+
+{% extends "layout.html" %}
+{% block title %}採掘状況{% end %}
+{% block content %}
+<h2>採掘状況</h2>
+<hr>
+<h3>ワーカー 一覧</h3>
+<table id="workers">
+  {% for addr in workers %}
+  <tr>
+    <td><a href="/workers?addr={{addr}}">{{addr}}</a></td>
+  </tr>
+  {% end %}
+</table>
+<br>
+<hr>
+<h3>採掘されたブロック一覧</h3>
+<table id="blocks">
+  {% for block in blocklog %}
+  <tr>
+    <td><a href="{{explorer_url}}{{block}}">{{block}}</a></td>
+  </tr>
+  {% end %}
+</table>
+{% end %}

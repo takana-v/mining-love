@@ -44,6 +44,7 @@ mainloop = asyncio.get_event_loop()
 extranonce1 = []
 notify_d = {}
 cont_list = {}
+web_list = {}
 submitlog = []
 
 
@@ -400,9 +401,12 @@ def get_hashrate(submithistory):
 
 def change_diff():
     global cont_list
+    global web_list
     while True:
         tmp_cont_list = {}
+        tmp_web_list = {}
         for c in connections:
+            print(tmp_web_list)
             try:
                 s_history = connections[c]["submithistory"]
                 now_diff = connections[c]["diff"]
@@ -414,7 +418,12 @@ def change_diff():
             ts2 = s_history[-1]
             ts_diff = Decimal(str(ts2)) - Decimal(str(ts1))
             ts_count = len(s_history)
-
+            try:
+                tmp_s,tmp_b = Decimal(int(COIN_SETTING.DIFF1_TARGET,16) / Decimal(now_diff) / (2**256-1)).as_integer_ratio()
+                # hashrate = Decimal(Decimal(str(tmp_b)) / Decimal(str(tmp_s)) / 2 * (ts_count-1) / ts_diff).quantize(Decimal('0'),rounding=ROUND_HALF_DOWN)
+                hashrate = Decimal(Decimal(str(tmp_b)) / Decimal(str(tmp_s)) * (ts_count-1) / ts_diff).quantize(Decimal('0'),rounding=ROUND_HALF_DOWN)
+            except:
+                continue
             # 貢献度を計算
             # pdiff1のとき1秒に何回submitできるか
             co = (ts_count - 1) * Decimal(now_diff) / ts_diff
@@ -442,10 +451,31 @@ def change_diff():
                 connections[c]["submithistory"] = []
             connections[c]["send_list"].append(retdata)
             mainloop.add_writer(c,send_cb,c)
+            # WEB用
+            if connections[c]["address"] in tmp_web_list:
+                if connections[c]["worker_name"] in tmp_web_list[connections[c]["address"]]:
+                    tmp_web_list[connections[c]["address"]][connections[c]["worker_name"]] += hashrate
+                else:
+                    tmp_web_list[connections[c]["address"]][connections[c]["worker_name"]] = hashrate
+            else:
+                tmp_web_list[connections[c]["address"]] = {connections[c]["worker_name"]:hashrate}
         c = Decimal(str(sum([tmp_cont_list[k] for k in tmp_cont_list])))
         for k in tmp_cont_list:
             tmp_cont_list[k] /= c
+        for addr in tmp_web_list:
+            for w in tmp_web_list[addr]:
+                if tmp_web_list[addr][w] < 1024:
+                    tmp_web_list[addr][w] = str(tmp_web_list[addr][w])+'H/s'
+                elif tmp_web_list[addr][w] < 1024**2:
+                    tmp_web_list[addr][w] = str(tmp_web_list[addr][w]/1024)+'KH/s'
+                elif tmp_web_list[addr][w] < 1024**3:
+                    tmp_web_list[addr][w] = str(tmp_web_list[addr][w]/1024**2)+'MH/s'
+                elif tmp_web_list[addr][w] < 1024**4:
+                    tmp_web_list[addr][w] = str(tmp_web_list[addr][w]/1024**3)+'GH/s'
+                else:
+                    tmp_web_list[addr][w] = str(tmp_web_list[addr][w]/1024**4)+'TH/s'
         cont_list = tmp_cont_list
+        web_list = tmp_web_list
         del tmp_cont_list
         if len(cont_list) == 0:
             with threading.RLock():
@@ -600,7 +630,8 @@ def recv_cb(fd):
                 mainloop.add_writer(fd,send_cb,fd)
                 return
             connections[fd]["worker_name"] = worker_name
-
+        else:
+            connections[fd]["worker_name"] = "-No name-"
         try:
             # segwitアドレスは弾かれます
             hexaddr = base58.b58decode_check(addr).hex()
@@ -782,27 +813,48 @@ def main():
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render('index.html',coin_name=MAIN_SETTING.COIN_NAME,fee=MAIN_SETTING.FEE)
+        self.render('index.html')
 
-class MlogHandler(tornado.web.RequestHandler):
+class StatsHandler(tornado.web.RequestHandler):
     def get(self):
-        retlist = ['<a href=\"'+MAIN_SETTING.WEB_EXPLORER_URL+i+'\">'+i+'</a>' for i in submitlog]
-        self.render('mlog.html',blocklog=retlist)
+        self.render('stats.html',workers=web_list,blocklog=submitlog,explorer_url=COIN_SETTING.WEB_EXPLORER_URL)
 
 class GettingstartedHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render('gs.html',port_diff=MAIN_SETTING.PORT_DIFF)
+        self.render('gs.html')
 
-class OthersHandler(tornado.web.RequestHandler):
+class NewsHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render('others.html')
+        self.render('news.html')
+class ApiHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('api.html')
+class WorkersHandler(tornado.web.RequestHandler):
+    def get(self):
+        try:
+            w_name = self.get_argument("addr")
+            w_data = web_list[w_name]
+            hexaddr = base58.b58decode_check(w_name).hex()
+            if hexaddr[0:2] == p2pkh_pref:
+                hexaddr_2 = "1"+hexaddr[2:]
+            elif hexaddr[0:2] == p2sh_pref:
+                hexaddr_2 = "2"+hexaddr[2:]
+            else:
+                raise Exception
+            cont = notify_d["coinbasevalue"] * cont_list[hexaddr_2] / 10**8
+        except Exception:
+            raise tornado.web.HTTPError(404)
+        self.render('workers.html',name=w_name,data=w_data,cont=cont,unit=COIN_SETTING.UNIT)
+
 
 AsyncIOMainLoop().install()
 application = tornado.web.Application([
         (r'/', MainHandler),
-        (r'/mining_log', MlogHandler),
+        (r'/stats', StatsHandler),
         (r'/getting_started', GettingstartedHandler),
-        (r'/others',OthersHandler)
+        (r'/news',NewsHandler),
+        (r'/api',ApiHandler),
+        (r'/workers',WorkersHandler)
         ],
         template_path=os.path.join(os.getcwd(), 'templates'),
         static_path=os.path.join(os.getcwd(), 'static'),
