@@ -34,7 +34,7 @@ WEB_PORT = 8080 # webのポート nginxとか使って80,443ポートで公開�
 WEB_EXPLORER_URL = "https://explorer.bellcoin.web4u.jp/block/" # エクスプローラーのURL（この後にblockhashが入る）
 ```
 ### FEE_TXOUT_SCRIPTについて
-1.手数料などを受け取りたいアドレスを用意します。
+1.手数料などを受け取りたいアドレスを用意します。  
 2.(p2pkhアドレスの場合)　以下のコードを実行
 
 ```

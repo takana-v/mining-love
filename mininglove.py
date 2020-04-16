@@ -406,7 +406,6 @@ def change_diff():
         tmp_cont_list = {}
         tmp_web_list = {}
         for c in connections:
-            print(tmp_web_list)
             try:
                 s_history = connections[c]["submithistory"]
                 now_diff = connections[c]["diff"]
