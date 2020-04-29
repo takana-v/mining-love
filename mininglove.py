@@ -30,6 +30,9 @@ elif MAIN_SETTING.COIN_NAME == "bellcoin_regtest":
 elif MAIN_SETTING.COIN_NAME == "monacoin":
     from lyra2re2_hash import getPoWHash
     from PoolSetting import MONACOIN as COIN_SETTING
+elif MAIN_SETTING.COIN_NAME == "bitzeny":
+    from zny_yescrypt import getPoWHash
+    from PoolSetting import BITZENY as COIN_SETTING
 else:
     raise Exception("COIN_NAME not found")
 
