@@ -33,6 +33,8 @@ COIND = { # coindに合わせ適宜変更
 WEB_PORT = 8080 # webのポート nginxとか使って80,443ポートで公開するといい
 WEB_EXPLORER_URL = "https://explorer.bellcoin.web4u.jp/block/" # エクスプローラーのURL（この後にblockhashが入る）
 ```
+必要に応じてhtml等を編集してください。
+
 ### FEE_TXOUT_SCRIPTについて
 1.手数料などを受け取りたいアドレスを用意します。  
 2.(p2pkhアドレスの場合)　以下のコードを実行
@@ -72,6 +74,8 @@ zmqpubhashblock=tcp://127.0.0.1:23456
 | ---- | ---- |
 | bellcoin | https://github.com/bellcoin-electrum/bell_yespower_python3 |
 | bellcoin_regtest | https://github.com/bellcoin-electrum/bell_yespower_python3 |
+| monacoin | https://github.com/metalicjames/lyra2re-hash-python |
+| bitzeny | https://github.com/BitzenyCoreDevelopers/zny_yescrypt_python3 |
 
 ## コインの追加
 PoolSetting.pyに以下の項目を追記してください。  
@@ -92,4 +96,12 @@ mininglove.pyに以下の項目を追記してください。
 elif MAIN_SETTING.COIN_NAME == "コイン名":
     from コインのマイニングアルゴリズムのモジュール import getPoWHash
     from PoolSetting import さっき追記した内容のクラス名 as COIN_SETTING
+```
+
+litecoin系のコインの場合は以下の項目を追記してください。
+recv_cb関数内、mining.submitの処理の所に出てきます。
+（headerの計算結果とblock hashが異なるためです）
+```
+if COIN_SETTING.COIN_NAME == "コイン名":
+    slog_hash = hashlib.sha256(hashlib.sha256(binascii.unhexlify(header)).digest()).digest()[::-1].hex()
 ```
