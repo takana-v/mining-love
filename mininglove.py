@@ -27,6 +27,11 @@ if MAIN_SETTING.COIN_NAME == "bellcoin":
 elif MAIN_SETTING.COIN_NAME == "bellcoin_regtest":
     from bell_yespower import getPoWHash
     from PoolSetting import BELLCOIN_REGTEST as COIN_SETTING
+elif MAIN_SETTING.COIN_NAME == "monacoin":
+    from lyra2re2_hash import getPoWHash
+    from PoolSetting import MONACOIN as COIN_SETTING
+else:
+    raise Exception("COIN_NAME not found")
 
 from logging import getLogger, StreamHandler, DEBUG, Formatter
 
@@ -69,7 +74,7 @@ def get_exnonce():
             extranonce1.append(exnonce)
             return exnonce
 
-def submitblock(fd,block,id,blockhash):
+def submitblock(fd,block,id,blockhash,submitlog_hash):
     global submitlog
     logger.debug(block)
     payload = json.dumps({"id":0, "method": "submitblock", "params":[block]})
@@ -81,7 +86,7 @@ def submitblock(fd,block,id,blockhash):
         retdata = '{"error": null, "id": '+str(id)+', "result": true}\n'
         connections[fd]["send_list"].append(retdata)
         mainloop.add_writer(fd,send_cb,fd)
-        submitlog.insert(0,blockhash)
+        submitlog.insert(0,submitlog_hash)
         submitlog = submitlog[0:10]
     else:
         retdata = '{"error": "23", "id": '+str(id)+', "result": false}\n'
@@ -504,7 +509,7 @@ def change_diff():
                     connections[fd]["send_list"].append(retdata)
                     mainloop.add_writer(fd,send_cb,fd)
                     connections[fd]["sharelog"] = []
-            time.sleep(120)
+            time.sleep(COIN_SETTING.BLOCKTIME*2)
         else:
             with threading.RLock():
                 logger.debug('change_diff_notice2')
@@ -521,7 +526,7 @@ def change_diff():
                     connections[fd]["send_list"].append(retdata)
                     mainloop.add_writer(fd,send_cb,fd)
                     connections[fd]["sharelog"] = []
-            time.sleep(120)
+            time.sleep(COIN_SETTING.BLOCKTIME*2)
 
 
 def accept_cb(s_socket,diff):
@@ -747,7 +752,11 @@ def recv_cb(fd):
             else:
                 block = header + 'fd'+ bytes.fromhex(hex(notify_data["txcount"]+1)[2:].zfill(4)).hex() + coinbasetx +notify_data["txs"]
             connections[fd]["submithistory"].append(datetime.datetime.now().timestamp())
-            threading.Thread(target=submitblock,args=(fd,block,data["id"],blockhash)).start()
+            if COIN_SETTING.COIN_NAME == "monacoin":
+                slog_hash = hashlib.sha256(hashlib.sha256(binascii.unhexlify(header)).digest()).digest()[::-1].hex()
+            else:
+                slog_hash = blockhash
+            threading.Thread(target=submitblock,args=(fd,block,data["id"],blockhash,slog_hash)).start()
         elif pdiff < hashdiff:
             # accept
             connections[fd]["submithistory"].append(datetime.datetime.now().timestamp())

@@ -4,6 +4,7 @@ class MAIN_SETTING:
     # 75byte以内で
     # ascii文字(1byte) 非ascii文字(3byte,utf-8)
     POOL_URL = 'test.mining.love'
+    # bellcoin, bellcoin_regtest, monacoin
     COIN_NAME = "bellcoin_regtest"
     # Feeの％,（1.5とか小数でもOK）,strで
     FEE = "0"
@@ -22,6 +23,7 @@ class MAIN_SETTING:
     WEB_PORT = 8080
 
 class BELLCOIN:
+    # bellcoin
     UNIT = "BELL"
     # BLOCK_VER = "00000005"
     DIFF1_TARGET = "0000ffff00000000000000000000000000000000000000000000000000000000"
@@ -34,8 +36,19 @@ class BELLCOIN:
     # WITNESS_RESERVED_VALUE = "0000000000000000000000000000000000000000000000000000000000000000"
 
 class BELLCOIN_REGTEST(BELLCOIN):
+    # bellcoin_regtest
     P2PKH_PREF = '6f'
     P2SH_PREF = 'c4'
+
+class MONACOIN:
+    # monacoin
+    UNIT = "MONA"
+    DIFF1_TARGET = "000000ffff000000000000000000000000000000000000000000000000000000"
+    PAYLOAD = {"id":0, "method": "getblocktemplate", "params":[{"rules":["segwit"]}]}
+    BLOCKTIME = 90
+    P2PKH_PREF = '32'
+    P2SH_PREF = '37'
+    WEB_EXPLORER_URL = 'https://mona.chainsight.info/block/'
 
 class STANDARD_RETURN:
     OK = 0
